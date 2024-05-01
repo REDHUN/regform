@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Addressbox extends StatelessWidget {
-  const Addressbox({super.key});
+  final TextEditingController? controller;
+
+  final String? Function(String?)? validator;
+  const Addressbox({super.key, this.controller, this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +17,11 @@ class Addressbox extends StatelessWidget {
             color: Colors.deepPurple.withOpacity(0.3),
             borderRadius: BorderRadius.circular(8)),
         child: TextFormField(
+          validator: validator,
           maxLines: 6,
           keyboardType: TextInputType.multiline,
           decoration: const InputDecoration(
-            hintText: 'Address',
+            label: Text('Addresss'),
             border: InputBorder.none,
           ),
         ));
