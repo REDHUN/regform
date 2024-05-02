@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:regform/core/appconstants/appcolors.dart';
 
 class Addressbox extends StatelessWidget {
   final TextEditingController? controller;
@@ -10,18 +11,24 @@ class Addressbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         // margin: EdgeInsets.all(12),
-        height: 6 * 24.0,
+        height: 6 * 20.0,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-            color: Colors.deepPurple.withOpacity(0.3),
+            color: AppColors.textFiledColor,
             borderRadius: BorderRadius.circular(8)),
         child: TextFormField(
           validator: validator,
           maxLines: 6,
           keyboardType: TextInputType.multiline,
           decoration: const InputDecoration(
-            label: Text('Addresss'),
+            label: Text(
+              'Addresss',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Barlow'),
+            ),
             border: InputBorder.none,
           ),
         ));

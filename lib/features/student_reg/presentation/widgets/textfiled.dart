@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:regform/core/appconstants/appcolors.dart';
 
 class RegTextFiled extends StatelessWidget {
   const RegTextFiled(
@@ -20,15 +21,25 @@ class RegTextFiled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
       decoration: BoxDecoration(
-          color: Colors.deepPurple.withOpacity(0.3),
+          color: AppColors.textFiledColor,
           borderRadius: BorderRadius.circular(8)),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
-          label: Text(hintText),
+          label: Text(
+            hintText,
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Barlow'),
+          ),
           icon: icon,
           border: InputBorder.none,
         ),
