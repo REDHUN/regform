@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static Color scaffoldBackground = Color(0XFFFFFFFF);
-  static Color appBarColor = Color(0XFF7a00eb);
+  static Color scaffoldBackground = const Color(0XFFFFFFFF);
+  static Color appBarColor = Colors.deepPurple;
   static Color textFiledColor =
-      Color.fromARGB(255, 234, 218, 250).withOpacity(0.4);
+      const Color.fromARGB(255, 234, 218, 250).withOpacity(0.4);
 }

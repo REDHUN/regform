@@ -5,6 +5,7 @@ class RegTextFiled extends StatelessWidget {
   const RegTextFiled(
       {super.key,
       this.onChanged,
+      this.inputType,
       this.validator,
       this.controller,
       required this.hintText,
@@ -17,6 +18,7 @@ class RegTextFiled extends StatelessWidget {
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
   final bool? obscureText;
+  final TextInputType? inputType;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +33,12 @@ class RegTextFiled extends StatelessWidget {
           color: AppColors.textFiledColor,
           borderRadius: BorderRadius.circular(8)),
       child: TextFormField(
+        keyboardType: inputType,
         controller: controller,
         decoration: InputDecoration(
           label: Text(
             hintText,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Barlow'),
