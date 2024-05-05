@@ -37,7 +37,6 @@ dependencies:
 
   http: ^1.2.1
   image_picker: ^1.1.1
-  responsive_builder: ^0.7.0
 
 dev_dependencies:
   flutter_test:

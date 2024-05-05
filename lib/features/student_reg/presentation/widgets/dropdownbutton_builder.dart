@@ -7,8 +7,6 @@ import 'package:http/http.dart';
 import 'package:regform/core/model/allclass.dart';
 import 'package:regform/core/model/student.dart';
 
-int academicYearId = -1;
-
 class DropDownButtonBuilder {
   static Future<List<Student>> getAcademicYear() async {
     final client = http.Client();
@@ -17,23 +15,10 @@ class DropDownButtonBuilder {
           'https://llabdemo.orell.com/api/masters/anonymous/getAcademicYear/32'));
       final data = jsonDecode(respose.body) as List;
       if (respose.statusCode == 200) {
-        Map<String, dynamic> firstItem = data.first;
-        int id = firstItem['academicYearId'];
-        academicYearId = id;
+        final List<Student> student =
+            data.map((json) => Student.fromJson(json)).toList();
 
-        getClassCourse(id.toString());
-        return data.map((dynamic json) {
-          final map = json as Map<String, dynamic>;
-
-          return Student(
-              academicYearId: map['academicYearId'],
-              academicYear: map['academicYear']);
-        }).toList();
-
-        // final List<Student> posts =
-        //     resposeBody.map((json) => Student.fromJson(json)).toList();
-
-        // return posts;
+        return student;
       } else {
         throw Exception('Failed to load posts');
       }
@@ -61,16 +46,10 @@ class DropDownButtonBuilder {
       final data = jsonDecode(respose.body) as List;
 
       if (respose.statusCode == 200) {
-        return data.map((dynamic json) {
-          final map = json as Map<String, dynamic>;
-          return AllClass(
-              course: map['course'], courseTreeId: map['courseTreeId']);
-        }).toList();
+        final List<AllClass> allclass =
+            data.map((json) => AllClass.fromJson(json)).toList();
 
-        // final List<Student> posts =
-        //     resposeBody.map((json) => Student.fromJson(json)).toList();
-
-        // return posts;
+        return allclass;
       } else {
         throw Exception('Failed to load posts');
       }

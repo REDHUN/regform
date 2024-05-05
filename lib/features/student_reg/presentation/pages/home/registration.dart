@@ -35,8 +35,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String imageChosenString = 'No file chosen';
   var academicYear;
   var selectedClass;
-  var academicYeardata;
-  var selectedClassdata;
+
+  int academicYearId = -1;
 
   void pickImage() async {
     var image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -53,6 +53,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       try {
         final url = Uri.https(
             'llabdemo.orell.com', 'api/userService/anonymous/saveUser');
+
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
@@ -79,26 +80,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
             "areaofintrest": "Test Orell"
           }),
         );
-        print(response.body);
-        print(response.statusCode);
 
         if (response.statusCode == 200) {
-          passwordController.clear();
-          studentNameController.clear();
-          whatsappNumberController.clear();
-          emailController.clear();
-          adresssNameController.clear();
-          guardianNameController.clear();
-          contactNumercontroller.clear();
-          usenamecontroller.clear();
-          passwordController.clear();
-          conformPasswordcontroller.clear();
-          adresssNameController.clear();
+          print(response.body);
+          // passwordController.clear();
+          // studentNameController.clear();
+          // whatsappNumberController.clear();
+          // emailController.clear();
+          // adresssNameController.clear();
+          // guardianNameController.clear();
+          // contactNumercontroller.clear();
+          // usenamecontroller.clear();
+          // passwordController.clear();
+          // conformPasswordcontroller.clear();
+          // adresssNameController.clear();
           setState(() {
             academicYear = null;
             selectedClass = null;
-            academicYeardata == null;
-            selectedClassdata = null;
           });
 
           return ScaffoldMessenger.of(context).showSnackBar(
@@ -181,288 +179,249 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
         backgroundColor: AppColors.scaffoldBackground,
         body: Center(
-          child: ListView(
-            children: [
-              SingleChildScrollView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.manual,
-                child: Column(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(color: AppColors.appBarColor),
-                      child: const Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                        child: Text(
-                          'Registration',
-                          style: TextStyle(
-                              fontFamily: 'Barlow',
-                              color: Colors.white,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(color: AppColors.appBarColor),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                    child: Text(
+                      'Registration',
+                      style: TextStyle(
+                          fontFamily: 'Barlow',
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold),
                     ),
-
-                    Container(
-                      margin:
-                          const EdgeInsets.only(left: 15, right: 20, top: 30),
-                      width: MediaQuery.of(context).size.width,
-                      child: const Text(
-                        'Academic Year',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontFamily: 'Barlow'),
-                      ),
-                    ),
-                    FutureBuilder<List<Student>>(
-                      future: DropDownButtonBuilder.getAcademicYear(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 8),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 8),
-                            decoration: BoxDecoration(
-                                color: AppColors.textFiledColor,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                // Initial Value
-                                value: academicYear,
-                                hint: const Text(
-                                  'Select Academic Year',
-                                  style: TextStyle(
-                                      fontFamily: 'Barlow',
-                                      color: Colors.black),
-                                ),
-                                isExpanded: true,
-
-                                // Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                iconSize: 30,
-
-                                elevation: 16,
-                                borderRadius: BorderRadius.circular(15),
-
-                                dropdownColor: Colors.white,
-
-                                padding: const EdgeInsets.all(10),
-                                style: const TextStyle(
-                                    fontFamily: 'Barlow',
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-
-                                // Down Arrow Icon
-
-                                // Array list of items
-                                items: snapshot.data!.map((item) {
-                                  return DropdownMenuItem(
-                                    value: item.academicYearId,
-                                    child: Text(item.academicYear.toString()),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  academicYear = value;
-                                  setState(() {
-                                    Student selectedAcademicYear =
-                                        snapshot.data!.firstWhere(
-                                      (element) =>
-                                          element.academicYearId == value,
-                                      orElse: () => snapshot.data!.first,
-                                    );
-                                    academicYeardata =
-                                        selectedAcademicYear.academicYear;
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Center(
-                              child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 8),
-                            decoration: BoxDecoration(
-                                color: AppColors.textFiledColor,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                onChanged: (value) {},
-                                // Initial Value
-                                value: selectedClass,
-
-                                hint: const Text(
-                                  'Unable fetch data !!',
-                                  style: TextStyle(fontFamily: 'Barlow'),
-                                ),
-                                isExpanded: true,
-                                // Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                iconSize: 30,
-
-                                //  elevation: 16,
-                                borderRadius: BorderRadius.circular(15),
-
-                                dropdownColor: Colors.white,
-                                padding: const EdgeInsets.all(10),
-                                style: const TextStyle(
-                                    fontFamily: 'Barlow',
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-
-                                // Array list of items
-                                items: null,
-                              ),
-                            ),
-                          ));
-                        }
-                      },
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 15),
-                      width: MediaQuery.of(context).size.width,
-                      child: const Text(
-                        'Class/Semester',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    FutureBuilder<List<AllClass>>(
-                      future: DropDownButtonBuilder.getClassCourse(
-                          academicYearId.toString()),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 8),
-                            decoration: BoxDecoration(
-                                color: AppColors.textFiledColor,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                // Initial Value
-                                value: selectedClass,
-
-                                hint: const Text(
-                                  'Select Class / Course',
-                                  style: TextStyle(fontFamily: 'Barlow'),
-                                ),
-                                isExpanded: true,
-                                // Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                iconSize: 30,
-
-                                //  elevation: 16,
-                                borderRadius: BorderRadius.circular(15),
-
-                                dropdownColor: Colors.white,
-                                padding: const EdgeInsets.all(10),
-                                style: const TextStyle(
-                                    fontFamily: 'Barlow',
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-
-                                // Array list of items
-                                items: snapshot.data!.map((item) {
-                                  return DropdownMenuItem(
-                                    value: item.courseTreeId,
-                                    child: Text(item.course.toString()),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  selectedClass = value;
-                                  setState(() {
-                                    AllClass selectedClassItem =
-                                        snapshot.data!.firstWhere(
-                                      (element) =>
-                                          element.courseTreeId == value,
-                                      orElse: () => snapshot.data!.first,
-                                    );
-                                    selectedClassdata =
-                                        selectedClassItem.course;
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Center(
-                              child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 8),
-                            decoration: BoxDecoration(
-                                color: AppColors.textFiledColor,
-                                borderRadius: BorderRadius.circular(8)),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                onChanged: (value) {},
-                                // Initial Value
-                                value: selectedClass,
-
-                                hint: const Text(
-                                  'Unable to fetch data',
-                                  style: TextStyle(fontFamily: 'Barlow'),
-                                ),
-                                isExpanded: true,
-                                // Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                iconSize: 30,
-
-                                //  elevation: 16,
-                                borderRadius: BorderRadius.circular(15),
-
-                                dropdownColor: Colors.white,
-                                padding: const EdgeInsets.all(10),
-                                style: const TextStyle(
-                                    fontFamily: 'Barlow',
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-
-                                // Array list of items
-                                items: null,
-                              ),
-                            ),
-                          ));
-                        }
-                      },
-                    ),
-
-                    //Fom Widget
-                    formBuild(),
-                    // ValueListenableBuilder(
-                    //   valueListenable: fieldValidNotifier,
-                    //   builder: (_, isValid, __) {
-                    //     return FilledButton(
-                    //       onPressed: isValid
-                    //           ? () {
-                    //               print('Registration Complete');
-                    //               studentNameController.clear();
-                    //               emailController.clear();
-                    //               passwordController.clear();
-                    //               conformPasswordcontroller.clear();
-                    //               whatsappNumberController.clear();
-                    //               guardianNameController.clear();
-                    //               usenamecontroller.clear();
-                    //               contactNumercontroller.clear();
-                    //             }
-                    //           : null,
-                    //       child: const Text("Register"),
-                    //     );
-                    //   },
-                    // ),
-                    Container(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width * .9,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+
+                Container(
+                  margin: const EdgeInsets.only(left: 15, right: 20, top: 30),
+                  width: MediaQuery.of(context).size.width,
+                  child: const Text(
+                    'Academic Year',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontFamily: 'Barlow'),
+                  ),
+                ),
+                FutureBuilder<List<Student>>(
+                  future: DropDownButtonBuilder.getAcademicYear(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                            color: AppColors.textFiledColor,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            // Initial Value
+                            value: academicYear,
+                            hint: const Text(
+                              'Select Academic Year',
+                              style: TextStyle(
+                                  fontFamily: 'Barlow', color: Colors.black),
+                            ),
+                            isExpanded: true,
+
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            iconSize: 30,
+
+                            elevation: 16,
+                            borderRadius: BorderRadius.circular(15),
+
+                            dropdownColor: Colors.white,
+
+                            padding: const EdgeInsets.all(10),
+                            style: const TextStyle(
+                                fontFamily: 'Barlow',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+
+                            // Down Arrow Icon
+
+                            // Array list of items
+                            items: snapshot.data!.map((item) {
+                              return DropdownMenuItem(
+                                value: item.academicYearId,
+                                child: Text(item.academicYear.toString()),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              academicYear = value;
+
+                              setState(() {
+                                Student data = snapshot.data!.firstWhere(
+                                    (element) =>
+                                        element.academicYearId == value);
+                                academicYearId = data.academicYearId!;
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Center(
+                          child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                            color: AppColors.textFiledColor,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            onChanged: (value) {},
+                            // Initial Value
+                            value: selectedClass,
+
+                            hint: const Text(
+                              'Unable fetch data !!',
+                              style: TextStyle(fontFamily: 'Barlow'),
+                            ),
+                            isExpanded: true,
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            iconSize: 30,
+
+                            //  elevation: 16,
+                            borderRadius: BorderRadius.circular(15),
+
+                            dropdownColor: Colors.white,
+                            padding: const EdgeInsets.all(10),
+                            style: const TextStyle(
+                                fontFamily: 'Barlow',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+
+                            // Array list of items
+                            items: null,
+                          ),
+                        ),
+                      ));
+                    }
+                  },
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  width: MediaQuery.of(context).size.width,
+                  child: const Text(
+                    'Class/Semester',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                FutureBuilder<List<AllClass>>(
+                  future: DropDownButtonBuilder.getClassCourse(
+                      academicYearId.toString()),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 8),
+                        decoration: BoxDecoration(
+                            color: AppColors.textFiledColor,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            // Initial Value
+                            value: selectedClass,
+
+                            hint: const Text(
+                              'Select Class / Course',
+                              style: TextStyle(fontFamily: 'Barlow'),
+                            ),
+                            isExpanded: true,
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            iconSize: 30,
+
+                            //  elevation: 16,
+                            borderRadius: BorderRadius.circular(15),
+
+                            dropdownColor: Colors.white,
+                            padding: const EdgeInsets.all(10),
+                            style: const TextStyle(
+                                fontFamily: 'Barlow',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+
+                            // Array list of items
+                            items: snapshot.data!.map((item) {
+                              return DropdownMenuItem(
+                                value: item.courseTreeId,
+                                child: Text(item.course.toString()),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              selectedClass = value;
+
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Center(
+                          child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                            color: AppColors.textFiledColor,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            onChanged: (value) {},
+                            // Initial Value
+                            value: selectedClass,
+
+                            hint: const Text(
+                              'Unable to fetch data',
+                              style: TextStyle(fontFamily: 'Barlow'),
+                            ),
+                            isExpanded: true,
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            iconSize: 30,
+
+                            //  elevation: 16,
+                            borderRadius: BorderRadius.circular(15),
+
+                            dropdownColor: Colors.white,
+                            padding: const EdgeInsets.all(10),
+                            style: const TextStyle(
+                                fontFamily: 'Barlow',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+
+                            // Array list of items
+                            items: null,
+                          ),
+                        ),
+                      ));
+                    }
+                  },
+                ),
+
+                //Fom Widget
+                formBuild(),
+
+                Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width * .9,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ],
+            ),
           ),
         ));
   }
@@ -626,8 +585,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5),
               child: RegTextFiled(
-                // onChanged: (_) =>
-                //     _formKey.currentState?.validate(),
                 validator: (value) {
                   return value!.isEmpty ? "please enter the password" : null;
                 },
