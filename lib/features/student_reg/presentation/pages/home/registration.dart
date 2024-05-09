@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,18 +38,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String imageChosenString = 'No file chosen';
   var academicYear;
   var selectedClass;
+  File? file;
+  var key;
 
   int academicYearId = -1;
+  XFile? image;
 
   void pickImage() async {
-    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    file = File(image!.path);
+
     setState(() {
       if (image == null) return;
-      imageChosenString = image.path.split('/').last;
+      imageChosenString = image!.path.split('/').last;
     });
   }
 
   submitDetails() async {
+    uploadImage(file!);
     if (_formKey.currentState!.validate() &&
         academicYear != -1 &&
         selectedClass != null) {
@@ -68,7 +77,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             "whatsappCode": "",
             "mobileNo": contactNumercontroller.text,
             "whatsappNo": whatsappNumberController.text,
-            "image": "",
+            "image": key,
             "password": passwordController.text,
             "userType": "STUDENT",
             "academicYearId": academicYear.toString(),
@@ -82,18 +91,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
         );
 
         if (response.statusCode == 200) {
-          print(response.body);
-          // passwordController.clear();
-          // studentNameController.clear();
-          // whatsappNumberController.clear();
-          // emailController.clear();
-          // adresssNameController.clear();
-          // guardianNameController.clear();
-          // contactNumercontroller.clear();
-          // usenamecontroller.clear();
-          // passwordController.clear();
-          // conformPasswordcontroller.clear();
-          // adresssNameController.clear();
+          passwordController.clear();
+          studentNameController.clear();
+          whatsappNumberController.clear();
+          emailController.clear();
+          adresssNameController.clear();
+          guardianNameController.clear();
+          contactNumercontroller.clear();
+          usenamecontroller.clear();
+          passwordController.clear();
+          conformPasswordcontroller.clear();
+          adresssNameController.clear();
           setState(() {
             academicYear = null;
             selectedClass = null;
@@ -133,6 +141,42 @@ class _RegistrationPageState extends State<RegistrationPage> {
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.only(bottom: 30.0, right: 10, left: 10),
       ));
+    }
+  }
+
+  Future<void> uploadImage(File imageFile) async {
+    var uri = Uri.parse('https://llabdemo.orell.com/upload/assets');
+    var key = '1714972625849'; // API key
+    var path = '/assets/LMS/orell1/userImage'; // Path to upload the image
+
+    // Create multipart request
+    var request = http.MultipartRequest('POST', uri);
+
+    // Add path parameter
+    request.fields['path'] = path;
+
+    // Add key parameter
+    request.fields['key'] = key;
+
+    // Add image file to request
+    var multipartFile =
+        await http.MultipartFile.fromPath('files', imageFile.path);
+    request.files.add(multipartFile);
+
+    // Send request
+    var response = await request.send();
+
+    // Check the response
+    if (response.statusCode == 200) {
+      var _responseText = await response.stream.bytesToString();
+
+      Map<String, dynamic> data = jsonDecode(_responseText.toString());
+      key = data['key'];
+
+      print(_responseText.toString());
+      print('Image uploaded successfully');
+    } else {
+      print('Failed to upload image. Error: ${response.reasonPhrase}');
     }
   }
 
@@ -515,7 +559,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       imageChosenString,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
